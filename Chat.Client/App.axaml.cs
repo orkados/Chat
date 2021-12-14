@@ -4,8 +4,6 @@ using Avalonia.Markup.Xaml;
 using Chat.Client.Services;
 using Chat.Client.ViewModels;
 using Chat.Client.Views;
-using Chat.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chat.Client;

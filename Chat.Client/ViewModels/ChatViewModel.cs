@@ -47,7 +47,12 @@ public class ChatViewModel : ViewModelBase
     private void Refresh()
     {
         var data = new byte[2048];
-        ConnectionSocket.Send(new byte[] {1, 1, 1, 1, 1, 1});
+        ConnectionSocket.Send(new byte[] {0, 4, 1, 1, 1, 1});
+        // if (ConnectionSocket.Available < data.Length)
+        // {
+        //     return;
+        // }
+
         ConnectionSocket.Receive(data);
         Messages.Clear();
         Messages.AddRange(GetMessagesFromDb.GetMessages(data));

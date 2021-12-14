@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Chat.Client.Models;
 using Chat.Client.Services;
 using Chat.Data.Models;

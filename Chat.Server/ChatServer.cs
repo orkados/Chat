@@ -53,6 +53,8 @@ public class ChatServer
     private async Task StartReceivingMessages(CancellationToken cancellationToken)
     {
         await using var db = new MyDbContext();
+        var length = new byte[2];
+        var protocolBody = new byte[4];
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -60,28 +62,48 @@ public class ChatServer
 
             foreach (var client in _clients)
             {
-                var data = new byte[256];
+                bool flag = true;
+
                 if (client.Available > 0)
                 {
-                    client.Receive(data);
-                    var t = new byte[] {1, 1, 1, 1, 1};
-                    if (data.Take(5).SequenceEqual(t))
-                    {
-                        var dbMessages = SendDbMessages.SendMessages();
-                        var dataForSending = new List<byte>();
+                    client.ReceiveBufferSize = 2;
+                    client.Receive(length);
 
-                        foreach (var sendMessage in dbMessages)
+                    if (length.Take(2).SequenceEqual(new byte[] {0, 4}))
+                    {
+                        client.ReceiveBufferSize = 4;
+                        client.Receive(protocolBody);
+                        foreach (var num in protocolBody)
                         {
-                            dataForSending.AddRange(sendMessage);
+                            if (num != 1)
+                            {
+                                flag = false;
+                                break;
+                            }
                         }
 
-                        client.Send(dataForSending.ToArray());
-                        await client.DisconnectAsync(false, cancellationToken);
+                        if (flag)
+                        {
+                            var dbMessages = SendDbMessages.SendMessages();
+                            var dataForSending = new List<byte>();
+
+                            foreach (var sendMessage in dbMessages)
+                            {
+                                dataForSending.AddRange(sendMessage);
+                            }
+
+                            client.Send(dataForSending.ToArray());
+                        }
                     }
 
                     else
                     {
-                        var message = DecodeMessage.Decode(data);
+                        client.ReceiveBufferSize = length[1];
+                        var data = new byte[length[1]];
+                        client.Receive(data);
+                        var tmp = data.ToList();
+                        tmp.InsertRange(0, length);
+                        var message = DecodeMessage.Decode(tmp.ToArray());
                         await db.Messages.AddAsync(message, cancellationToken);
                         await db.SaveChangesAsync(cancellationToken);
                         _messagesQueue.Enqueue(EncodeMessage.Encode(message));
@@ -100,7 +122,15 @@ public class ChatServer
             {
                 foreach (var client in _clients)
                 {
-                    client.Send(message);
+                    try
+                    {
+                        client.Send(message);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine("Возникла ошибка при попытке отправить сообщение клиенту: " +
+                                          $"{client.LocalEndPoint} | {exception}");
+                    }
                 }
             }
         }
