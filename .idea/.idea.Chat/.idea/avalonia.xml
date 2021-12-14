@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Chat.Client/App.axaml" value="Chat.Client/Chat.Client.csproj" />
+        <entry key="Chat.Client/Views/ChatView.axaml" value="Chat.Client/Chat.Client.csproj" />
+        <entry key="Chat.Client/Views/MainWindow.axaml" value="Chat.Client/Chat.Client.csproj" />
+        <entry key="Client/App.axaml" value="Client/Client.csproj" />
+        <entry key="Client/Views/MainWindow.axaml" value="Client/Client.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

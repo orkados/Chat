@@ -1,0 +1,14 @@
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\bin\Debug\net6.0\Chat.Data.deps.json
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\bin\Debug\net6.0\Chat.Data.runtimeconfig.json
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\bin\Debug\net6.0\Chat.Data.dll
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\bin\Debug\net6.0\ref\Chat.Data.dll
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\bin\Debug\net6.0\Chat.Data.pdb
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.csproj.AssemblyReference.cache
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.AssemblyInfoInputs.cache
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.AssemblyInfo.cs
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.csproj.CoreCompileInputs.cache
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.dll
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\ref\Chat.Data.dll
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.pdb
+C:\Users\arkadiy\RiderProjects\Chat\Chat.Data\obj\Debug\net6.0\Chat.Data.genruntimeconfig.cache
