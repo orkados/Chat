@@ -15,7 +15,6 @@ public static class SendDbMessages
         var encodeMessages = new List<byte[]>();
         foreach (var message in messages)
         {
-            //encodeMessages.Add(EncodeMessage.Encode(message));
             encodeMessages.Add(MessageProcessing.Encode(message));
         }
 

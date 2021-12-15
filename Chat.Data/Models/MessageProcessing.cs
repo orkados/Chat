@@ -8,7 +8,7 @@ public static class MessageProcessing
     {
         if (message.Content.Length > ushort.MaxValue)
         {
-            throw new Exception("String longer than 65034 symbols");
+            throw new Exception("String longer than 65534 symbols");
         }
 
         var encodeMessage = new List<byte>();
@@ -24,8 +24,8 @@ public static class MessageProcessing
         encodeMessage.Add(contentLengthSecondByte);
         encodeMessage.AddRange(encodedContent);
 
-        var firstByteMessageLength = (byte) (encodeMessage.Count >> 8);
-        var secondByteMessageLength = (byte) encodeMessage.Count;
+        var firstByteMessageLength = (byte) ((encodeMessage.Count + 2) >> 8);
+        var secondByteMessageLength = (byte) (encodeMessage.Count + 2);
         encodeMessage.Insert(0, firstByteMessageLength);
         encodeMessage.Insert(1, secondByteMessageLength);
 
@@ -35,7 +35,7 @@ public static class MessageProcessing
     public static Message Decode(byte[] encodeMessage)
     {
         var usernameLength = encodeMessage[2];
-        var contentLength = (encodeMessage[0] << 8) + encodeMessage[1] - usernameLength - 3;
+        var contentLength = (encodeMessage[0] << 8) + encodeMessage[1] - usernameLength - 5;
 
         var username = Encoding.UTF8.GetString(encodeMessage
             .Skip(3)

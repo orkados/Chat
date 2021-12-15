@@ -11,7 +11,6 @@ public static class Program
     {
         await using var db = new MyDbContext();
 
-
         var cancellationSource = new CancellationTokenSource();
         var server = new ChatServer();
 

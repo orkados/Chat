@@ -93,6 +93,10 @@ public class ChatServer
                                 dataForSending.AddRange(sendMessage);
                             }
 
+                            var allMessagesLengthFirstByte = (byte) (dataForSending.Count >> 8);
+                            var allMessageLengthSecondByte = (byte) dataForSending.Count;
+                            dataForSending.Insert(0, allMessagesLengthFirstByte);
+                            dataForSending.Insert(1, allMessageLengthSecondByte);
                             client.Send(dataForSending.ToArray());
                         }
                     }
