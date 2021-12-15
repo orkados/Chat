@@ -103,7 +103,7 @@ public class ChatServer
 
                     else
                     {
-                        client.ReceiveBufferSize = (length[0] << 8) + length[1];
+                        client.ReceiveBufferSize = ProceedMessageLength.GetLength(length);
                         var data = new byte[client.ReceiveBufferSize];
                         client.Receive(data);
                         var tmp = data.ToList();

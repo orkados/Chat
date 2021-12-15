@@ -12,11 +12,11 @@ public static class MessageProcessing
         }
 
         var encodeMessage = new List<byte>();
-        var usernameLength = (byte) message.Username.Length;
         var encodedUsername = Encoding.UTF8.GetBytes(message.Username);
-        var contentLengthFirstByte = (byte) (message.Content.Length >> 8);
-        var contentLengthSecondByte = (byte) message.Content.Length;
+        var usernameLength = (byte) encodedUsername.Length;
         var encodedContent = Encoding.UTF8.GetBytes(message.Content);
+        var contentLengthFirstByte = (byte) (encodedContent.Length >> 8);
+        var contentLengthSecondByte = (byte) encodedContent.Length;
 
         encodeMessage.Add(usernameLength);
         encodeMessage.AddRange(encodedUsername);
