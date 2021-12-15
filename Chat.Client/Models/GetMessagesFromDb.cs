@@ -20,7 +20,7 @@ public static class GetMessagesFromDb
                 counter--;
                 var tmpArr = data
                     .Skip(counter).Take(lengthMes).ToArray();
-                list.Add(DecodeMessage.Decode(tmpArr));
+                list.Add(MessageProcessing.Decode(tmpArr));
                 counter += lengthMes;
             }
             else

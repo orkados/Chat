@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Chat.Data;
+using Chat.Data.Models;
 
 namespace Chat.Server;
 
@@ -98,15 +99,15 @@ public class ChatServer
 
                     else
                     {
-                        client.ReceiveBufferSize = length[1];
-                        var data = new byte[length[1]];
+                        client.ReceiveBufferSize = (length[0] << 8) + length[1];
+                        var data = new byte[client.ReceiveBufferSize];
                         client.Receive(data);
                         var tmp = data.ToList();
                         tmp.InsertRange(0, length);
-                        var message = DecodeMessage.Decode(tmp.ToArray());
+                        var message = MessageProcessing.Decode(tmp.ToArray());
                         await db.Messages.AddAsync(message, cancellationToken);
                         await db.SaveChangesAsync(cancellationToken);
-                        _messagesQueue.Enqueue(EncodeMessage.Encode(message));
+                        _messagesQueue.Enqueue(MessageProcessing.Encode(message));
                     }
                 }
             }

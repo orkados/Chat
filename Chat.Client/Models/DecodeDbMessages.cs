@@ -10,7 +10,7 @@ public static class DecodeDbMessages
         var decodedMessages = new List<Message>();
         foreach (var encodeMessage in encodedMessages)
         {
-            decodedMessages.Add(DecodeMessage.Decode(encodeMessage));
+            decodedMessages.Add(MessageProcessing.Decode(encodeMessage));
         }
 
         return decodedMessages;

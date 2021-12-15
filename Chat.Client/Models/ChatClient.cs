@@ -10,7 +10,7 @@ public class ChatClient
     {
         try
         {
-            var data = EncodeMessage.Encode(message);
+            var data = MessageProcessing.Encode(message);
             socket.Send(data);
         }
         catch (Exception ex)

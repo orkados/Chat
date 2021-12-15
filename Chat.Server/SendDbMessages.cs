@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Chat.Data;
+using Chat.Data.Models;
 
 namespace Chat.Server;
 
@@ -14,7 +15,8 @@ public static class SendDbMessages
         var encodeMessages = new List<byte[]>();
         foreach (var message in messages)
         {
-            encodeMessages.Add(EncodeMessage.Encode(message));
+            //encodeMessages.Add(EncodeMessage.Encode(message));
+            encodeMessages.Add(MessageProcessing.Encode(message));
         }
 
         return encodeMessages;

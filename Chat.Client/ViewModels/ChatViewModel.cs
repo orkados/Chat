@@ -38,7 +38,7 @@ public class ChatViewModel : ViewModelBase
             if (ConnectionSocket.Available > 0)
             {
                 ConnectionSocket.Receive(data);
-                var message = DecodeMessage.Decode(data);
+                var message = MessageProcessing.Decode(data);
                 Messages.Add(message);
             }
         }
@@ -48,11 +48,6 @@ public class ChatViewModel : ViewModelBase
     {
         var data = new byte[2048];
         ConnectionSocket.Send(new byte[] {0, 4, 1, 1, 1, 1});
-        // if (ConnectionSocket.Available < data.Length)
-        // {
-        //     return;
-        // }
-
         ConnectionSocket.Receive(data);
         Messages.Clear();
         Messages.AddRange(GetMessagesFromDb.GetMessages(data));
