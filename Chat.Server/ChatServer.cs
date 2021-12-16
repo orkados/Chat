@@ -13,7 +13,7 @@ namespace Chat.Server;
 
 public class ChatServer
 {
-    private string Host { get; init; } = "192.168.115.101:8895";
+    private string Host { get; init; } = "192.168.115.60:8895";
 
     private readonly TcpListener _server;
     private readonly BlockingCollection<Socket> _clients;
@@ -93,17 +93,21 @@ public class ChatServer
                                 dataForSending.AddRange(sendMessage);
                             }
 
-                            var allMessagesLengthFirstByte = (byte) (dataForSending.Count >> 8);
-                            var allMessageLengthSecondByte = (byte) dataForSending.Count;
+                            var allMessagesLengthFirstByte = (byte) (dataForSending.Count >> 24);
+                            var allMessageLengthSecondByte = (byte) (dataForSending.Count >> 16);
+                            var allMessageLengthThirdByte = (byte) (dataForSending.Count >> 8);
+                            var allMessageLengthForthByte = (byte) dataForSending.Count;
                             dataForSending.Insert(0, allMessagesLengthFirstByte);
                             dataForSending.Insert(1, allMessageLengthSecondByte);
+                            dataForSending.Insert(2, allMessageLengthThirdByte);
+                            dataForSending.Insert(3, allMessageLengthForthByte);
                             client.Send(dataForSending.ToArray());
                         }
                     }
 
                     else
                     {
-                        client.ReceiveBufferSize = ProceedMessageLength.GetLength(length);
+                        client.ReceiveBufferSize = ProceedMessageLength.GetMessageLength(length);
                         var data = new byte[client.ReceiveBufferSize];
                         client.Receive(data);
                         var tmp = data.ToList();

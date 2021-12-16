@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Chat.Client.Models;
@@ -15,13 +17,17 @@ public class ChatViewModel : ViewModelBase
 
     private Task _receiveNewMessagesTask;
 
+    private static readonly byte[] GetMessagesCommand = {0, 4, 1, 1, 1, 1};
+    private byte[] _buffer;
+
 
     public ChatViewModel(IpConfigService ipConfig)
     {
         ConnectionSocket = ipConfig.MySocket;
         Messages = new ObservableCollection<Message>();
-        Refresh();
+        _buffer = new byte[16 * 1024];
         Start();
+        Refresh();
     }
 
     private void Start()
@@ -34,11 +40,20 @@ public class ChatViewModel : ViewModelBase
         while (true)
         {
             await Task.Delay(100);
-            var data = new byte[256];
             if (ConnectionSocket.Available > 0)
             {
-                ConnectionSocket.Receive(data);
-                var message = MessageProcessing.Decode(data);
+                Array.Clear(_buffer);
+                ConnectionSocket.Receive(_buffer, 2, SocketFlags.None);
+                var length = ProceedMessageLength.GetMessageLength(_buffer);
+
+                while (length >= _buffer.Length)
+                {
+                    _buffer = new byte[_buffer.Length * 2];
+                }
+
+                ConnectionSocket.Receive(_buffer, 2, length, SocketFlags.None);
+
+                var message = MessageProcessing.Decode(_buffer);
                 Messages.Add(message);
             }
         }
@@ -46,17 +61,18 @@ public class ChatViewModel : ViewModelBase
 
     private void Refresh()
     {
-        var length = new byte[2];
+        ConnectionSocket.Send(GetMessagesCommand);
+        ConnectionSocket.Receive(_buffer, 4, SocketFlags.None);
 
-        ConnectionSocket.ReceiveBufferSize = 2;
-        ConnectionSocket.Send(new byte[] {0, 4, 1, 1, 1, 1});
-        ConnectionSocket.Receive(length);
+        var length = ProceedMessageLength.GetDbMessagesLength(_buffer);
 
-        ConnectionSocket.ReceiveBufferSize = ProceedMessageLength.GetLength(length);
-        var messages = new byte[ConnectionSocket.ReceiveBufferSize];
-        ConnectionSocket.Receive(messages);
+        while (length >= _buffer.Length)
+        {
+            _buffer = new byte[_buffer.Length * 2];
+        }
 
+        ConnectionSocket.Receive(_buffer, 4, length, SocketFlags.None);
         Messages.Clear();
-        Messages.AddRange(DbReceiver.GetMessages(messages, messages.Length));
+        Messages.AddRange(DbReceiver.GetMessages(_buffer, length));
     }
 }

@@ -53,4 +53,35 @@ public static class MessageProcessing
             Content = content
         };
     }
+
+    public static List<Message> DecodeAllMessages(byte[] encodeMessage, int offset)
+    {
+        var decodedMessages = new List<Message>();
+
+        while ((encodeMessage[offset] << 8) + encodeMessage[offset + 1] != 0)
+        {
+            var usernameLength = encodeMessage[offset + 2];
+            var contentLength = (encodeMessage[offset] << 8) + encodeMessage[offset + 1] - usernameLength - 5;
+
+            var username = Encoding.UTF8.GetString(encodeMessage
+                .Skip(offset + 3)
+                .Take(usernameLength)
+                .ToArray());
+
+            var content = Encoding.UTF8.GetString(encodeMessage
+                .Skip(5 + offset + usernameLength)
+                .Take(contentLength)
+                .ToArray());
+
+            decodedMessages.Add(new Message
+            {
+                Username = username,
+                Content = content
+            });
+
+            offset += (encodeMessage[offset] << 8) + encodeMessage[offset + 1];
+        }
+
+        return decodedMessages;
+    }
 }
