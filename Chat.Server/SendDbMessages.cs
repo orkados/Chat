@@ -10,14 +10,7 @@ public static class SendDbMessages
     public static List<byte[]> SendMessages()
     {
         using var db = new MyDbContext();
-
         var messages = db.Messages.ToList();
-        var encodeMessages = new List<byte[]>();
-        foreach (var message in messages)
-        {
-            encodeMessages.Add(MessageProcessing.Encode(message));
-        }
-
-        return encodeMessages;
+        return messages.Select(MessageProcessing.Encode).ToList();
     }
 }
