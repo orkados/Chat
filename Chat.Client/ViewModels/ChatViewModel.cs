@@ -45,12 +45,22 @@ public class ChatViewModel : ViewModelBase
                 ConnectionSocket.Receive(_buffer, 2, SocketFlags.None);
                 var length = ProceedMessageLength.GetMessageLength(_buffer);
 
-                while (length >= _buffer.Length)
+                if (length >= _buffer.Length)
                 {
-                    _buffer = new byte[_buffer.Length * 2];
+                    var firstLengthByte = _buffer[0];
+                    var secondLengthByte = _buffer[1];
+
+                    while (length >= _buffer.Length)
+                    {
+                        _buffer = new byte[_buffer.Length * 2];
+                    }
+
+                    _buffer[0] = firstLengthByte;
+                    _buffer[1] = secondLengthByte;
                 }
 
                 ConnectionSocket.Receive(_buffer, 2, length, SocketFlags.None);
+
 
                 var message = MessageProcessing.Decode(_buffer);
                 Messages.Add(message);
@@ -70,8 +80,11 @@ public class ChatViewModel : ViewModelBase
             _buffer = new byte[_buffer.Length * 2];
         }
 
-        ConnectionSocket.Receive(_buffer, 4, length, SocketFlags.None);
-        Messages.Clear();
-        Messages.AddRange(DbReceiver.GetMessages(_buffer, length));
+        if (ConnectionSocket.Available > 0)
+        {
+            ConnectionSocket.Receive(_buffer, 4, length, SocketFlags.None);
+            Messages.Clear();
+            Messages.AddRange(DbReceiver.GetMessages(_buffer, length));
+        }
     }
 }
