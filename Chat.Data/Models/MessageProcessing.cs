@@ -12,12 +12,16 @@ public static class MessageProcessing
         }
 
         var encodeMessage = new List<byte>();
+        var encodedDate = Encoding.UTF8.GetBytes(message.Date);
+        var dateLength = (byte) encodedDate.Length;
         var encodedUsername = Encoding.UTF8.GetBytes(message.Username);
         var usernameLength = (byte) encodedUsername.Length;
         var encodedContent = Encoding.UTF8.GetBytes(message.Content);
         var contentLengthFirstByte = (byte) (encodedContent.Length >> 8);
         var contentLengthSecondByte = (byte) encodedContent.Length;
 
+        encodeMessage.Add(dateLength);
+        encodeMessage.AddRange(encodedDate);
         encodeMessage.Add(usernameLength);
         encodeMessage.AddRange(encodedUsername);
         encodeMessage.Add(contentLengthFirstByte);
@@ -34,23 +38,30 @@ public static class MessageProcessing
 
     public static Message Decode(byte[] encodeMessage)
     {
-        var usernameLength = encodeMessage[2];
-        var contentLength = (encodeMessage[0] << 8) + encodeMessage[1] - usernameLength - 5;
+        var dateLength = encodeMessage[2];
+        var usernameLength = encodeMessage[3 + dateLength];
+        var contentLength = (encodeMessage[0] << 8) + encodeMessage[1] - usernameLength - dateLength - 6;
+
+        var date = Encoding.UTF8.GetString(encodeMessage
+            .Skip(3)
+            .Take(dateLength)
+            .ToArray());
 
         var username = Encoding.UTF8.GetString(encodeMessage
-            .Skip(3)
+            .Skip(4 + dateLength)
             .Take(usernameLength)
             .ToArray());
 
         var content = Encoding.UTF8.GetString(encodeMessage
-            .Skip(5 + usernameLength)
+            .Skip(6 + usernameLength + dateLength)
             .Take(contentLength)
             .ToArray());
 
         return new Message
         {
             Username = username,
-            Content = content
+            Content = content,
+            Date = date
         };
     }
 
@@ -60,21 +71,29 @@ public static class MessageProcessing
 
         while ((encodeMessage[offset] << 8) + encodeMessage[offset + 1] != 0)
         {
-            var usernameLength = encodeMessage[offset + 2];
-            var contentLength = (encodeMessage[offset] << 8) + encodeMessage[offset + 1] - usernameLength - 5;
+            var dateLength = encodeMessage[offset + 2];
+            var usernameLength = encodeMessage[offset + 3 + dateLength];
+            var contentLength =
+                (encodeMessage[offset] << 8) + encodeMessage[offset + 1] - usernameLength - dateLength - 6;
+
+            var date = Encoding.UTF8.GetString(encodeMessage
+                .Skip(offset + 3)
+                .Take(dateLength)
+                .ToArray());
 
             var username = Encoding.UTF8.GetString(encodeMessage
-                .Skip(offset + 3)
+                .Skip(offset + 4 + dateLength)
                 .Take(usernameLength)
                 .ToArray());
 
             var content = Encoding.UTF8.GetString(encodeMessage
-                .Skip(5 + offset + usernameLength)
+                .Skip(6 + offset + usernameLength + dateLength)
                 .Take(contentLength)
                 .ToArray());
 
             decodedMessages.Add(new Message
             {
+                Date = date,
                 Username = username,
                 Content = content
             });

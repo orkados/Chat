@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Chat.Client.Models;
 using Chat.Client.Services;
 using Chat.Data.Models;
@@ -27,6 +28,7 @@ public class MessageManagerViewModel : ViewModelBase
 
     private void SendMessage(Message message)
     {
+        message.Date = DateTime.Now.ToString();
         var newClient = new ChatClient(message, IpConfig.MySocket);
         Content = "";
     }
