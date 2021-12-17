@@ -6,6 +6,7 @@
         <entry key="Chat.Client/App.axaml" value="Chat.Client/Chat.Client.csproj" />
         <entry key="Chat.Client/Views/ChatView.axaml" value="Chat.Client/Chat.Client.csproj" />
         <entry key="Chat.Client/Views/MainWindow.axaml" value="Chat.Client/Chat.Client.csproj" />
+        <entry key="Chat.Client/Views/MessageManagerView.axaml" value="Chat.Client/Chat.Client.csproj" />
         <entry key="Client/App.axaml" value="Client/Client.csproj" />
         <entry key="Client/Views/MainWindow.axaml" value="Client/Client.csproj" />
       </map>

@@ -1,0 +1,52 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="clr-namespace:Chat.Client.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Chat.Client.Views.MessageManagerView">
+
+    <UserControl.Resources>
+        <models:ConvertToMessage x:Key="Converter" />
+    </UserControl.Resources>
+
+    <Grid
+        RowDefinitions="Auto,Auto, Auto">
+
+        <TextBox
+            Grid.Row="0"
+            InnerRightContent=""
+            Watermark="Enter your Username here"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Height="20"
+            Name="Username" />
+
+        <TextBox
+            Grid.Row="1"
+            Text="{Binding Content}"
+            Watermark="Enter your message here"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Height="250"
+            Name="Message" />
+
+        <Button
+            Grid.Row="2"
+            Name="SendButton"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            Content="Send"
+            Command="{ Binding SendMessageCommand}">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource Converter}">
+                    <Binding Path="#Username.Text" />
+                    <Binding Path="#Message.Text" />
+                </MultiBinding>
+            </Button.CommandParameter>
+        </Button>
+    </Grid>
+
+
+</UserControl>

@@ -14,19 +14,24 @@
                 <DataTemplate
                     DataType="models:Message">
                     <Border
+                        BorderBrush="Black"
+                        BorderThickness="2"
                         Margin="10"
-                        CornerRadius="15"
-                        Background="Aqua">
+                        CornerRadius="15">
                         <Grid
                             RowDefinitions="0.2*, *">
                             <TextBlock
                                 Grid.Row="0"
+                                Margin="10"
                                 FontWeight="Bold"
                                 FontSize="16"
+                                Foreground="Purple"
                                 Text="{Binding Username}">
                             </TextBlock>
                             <TextBlock
                                 Grid.Row="1"
+                                Foreground="DarkViolet"
+                                Margin="10 0 10 20"
                                 TextWrapping="Wrap"
                                 Text="{Binding Content}">
                             </TextBlock>

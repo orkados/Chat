@@ -13,7 +13,7 @@ namespace Chat.Server;
 
 public class ChatServer
 {
-    private string Host { get; init; } = "192.168.115.60:8895";
+    private string Host { get; init; } = "192.168.111.97:8895";
 
     private readonly TcpListener _server;
     private readonly BlockingCollection<Socket> _clients;

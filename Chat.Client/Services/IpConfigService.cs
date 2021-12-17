@@ -10,6 +10,6 @@ public class IpConfigService
     public IpConfigService()
     {
         MySocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        MySocket.Connect("192.168.115.60", 8895);
+        MySocket.Connect("192.168.111.97", 8895);
     }
 }

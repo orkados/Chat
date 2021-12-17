@@ -14,6 +14,7 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<MainWindowViewModel>()
-            .AddTransient<ChatViewModel>();
+            .AddTransient<ChatViewModel>()
+            .AddTransient<MessageManagerViewModel>();
     }
 }

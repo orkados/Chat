@@ -11,7 +11,7 @@ namespace Chat.Client.ViewModels;
 
 public class ChatViewModel : ViewModelBase
 {
-    public ObservableCollection<Message> Messages { get; set; }
+    private ObservableCollection<Message> Messages { get; set; }
     private static Socket ConnectionSocket { get; set; }
 
     private Task _receiveNewMessagesTask;
