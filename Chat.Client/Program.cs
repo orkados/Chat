@@ -6,6 +6,7 @@ namespace Chat.Client;
 
 class Program
 {
+    // проверка
     [STAThread]
     public static void Main(string[] args) => BuildAvaloniaApp()
         .StartWithClassicDesktopLifetime(args);
